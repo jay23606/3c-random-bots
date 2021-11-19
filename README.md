@@ -9,7 +9,7 @@ dotnet new blazorserver --name random-bots
 
 cd random-bots
 
-dotnet add package XCommas
+dotnet add package XCommas.Net
 
 cp Index.razor /random-bots/Pages
 
