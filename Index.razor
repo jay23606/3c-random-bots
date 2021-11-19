@@ -1,0 +1,422 @@
+@page "/"
+@using XCommas.Net
+@using XCommas.Net.Objects
+<h1><div style="font-variant:small-caps;text-align:center">3Commas Random Bot Generator</div></h1>
+<table style='width:100%'>
+    <tr>
+        <td style="width:150px">3c api key</td>
+        <td><input style='width:100%' @bind="key" /></td>
+    </tr>
+    <tr>
+        <td>3c api secret</td>
+        <td>
+            <input style='width:100%' @bind="secret" />
+        </td>
+    </tr>
+    <tr>
+        <td>Number of random  bots</td>
+        <td><input @bind="numBots" /></td>
+    </tr>
+    <tr>
+        <td>Bot name</td>
+        <td><input @bind="botName" />will be named e.g. &lt;Bot Name&gt;_&lt;1-100&gt;</td>
+    </tr>
+    <tr>
+        <td>Pairs</td>
+        <td><textarea @bind="pairs" style='width:100%' rows="4" /></td>
+    </tr>
+    <tr>
+        <td>BO</td>
+        <td>
+            default:<input @bind="BO" size="4" />
+            min:<input @bind="BOmin" size="4" />
+            max:<input @bind="BOmax" size="4" />
+            step:<input @bind="BOstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>SO</td>
+        <td>
+            default:<input @bind="SO" size="4" />
+            min:<input @bind="SOmin" size="4" />
+            max:<input @bind="SOmax" size="4" />
+            step:<input @bind="SOstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>SOS (price deviation %)</td>
+        <td>
+            default:<input @bind="SOS" size="4" />
+            min:<input @bind="SOSmin" size="4" />
+            max:<input @bind="SOSmax" size="4" />
+            step:<input @bind="SOSstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>OS (volume scale)</td>
+        <td>
+            default:<input @bind="OS" size="4" />
+            min:<input @bind="OSmin" size="4" />
+            max:<input @bind="OSmax" size="4" />
+            step:<input @bind="OSstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>SS (step scale)</td>
+        <td>
+            default:<input @bind="SS" size="4" />
+            min:<input @bind="SSmin" size="4" />
+            max:<input @bind="SSmax" size="4" />
+            step:<input @bind="SSstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>TP</td>
+        <td>
+            default:<input @bind="TP" size="4" />
+            min:<input @bind="TPmin" size="4" />
+            max:<input @bind="TPmax" size="4" />
+            step:<input @bind="TPstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>Number of start conditions</td>
+        <td>
+            default:<input @bind="SC" size="4" />
+            min:<input @bind="SCmin" size="4" />
+            max:<input @bind="SCmax" size="4" />
+            step:<input @bind="SCstep" size="4" style="display:none" />
+        </td>
+    </tr>
+    <tr>
+        <td>QFL type</td>
+        <td>
+            default:<input @bind="QFLT" size="4" />
+            min:<input @bind="QFLTmin" size="4" />
+            max:<input @bind="QFLTmax" size="4" />
+            step:<input @bind="QFLTstep" size="4" style="display:none" />
+            <br />
+            0=original, 1=daytrade, 2=conservative, 3=position
+            <br />
+            Clear input fields to skip  inclusion
+        </td>
+    </tr>
+    <tr>
+        <td>QFL %</td>
+        <td>
+            default:<input @bind="QFLP" size="4" />
+            min:<input @bind="QFLPmin" size="4" />
+            max:<input @bind="QFLPmax" size="4" />
+            step:<input @bind="QFLPstep" size="4" />
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>TV type</td>
+        <td>
+            default:<input @bind="TV" size="4" />
+            min:<input @bind="TVmin" size="4" />
+            max:<input @bind="TVmax" size="4" />
+            step:<input @bind="TVstep" size="4" style="display:none" />
+            <br />
+            0=buy, 1=sell, 2=strong buy, 3=strong sell
+            <br />
+            Clear input fields to skip  inclusion
+        </td>
+    </tr>
+    <tr>
+        <td>TV timeframe</td>
+        <td>
+            default:<input @bind="TVT" size="4" />
+            min:<input @bind="TVTmin" size="4" />
+            max:<input @bind="TVTmax" size="4" />
+            step:<input @bind="TVTstep" size="4" style="display:none" />
+            <br />
+            0=1m, 1=5m, 2=15m, 3=1hr, 4=4h, 5=1d, 6=1w, 7=1M, 8=cumulative
+        </td>
+    </tr>
+    <tr>
+        <td>RSI</td>
+        <td>
+            default:<input @bind="RSI" size="4" />
+            min:<input @bind="RSImin" size="4" />
+            max:<input @bind="RSImax" size="4" />
+            step:<input @bind="RSIstep" size="4" />
+            <br />
+            Clear input fields to skip  inclusion
+        </td>
+    </tr>
+    <tr>
+        <td>RSI timeframe</td>
+        <td>
+            default:<input @bind="RSIT" size="4" />
+            min:<input @bind="RSITmin" size="4" />
+            max:<input @bind="RSITmax" size="4" />
+            step:<input @bind="RSITstep" size="4" style="display:none" /><br />
+            0=3m, 1=5m, 2=15m, 3=30m, 4=1h, 5=2h, 6=4h
+        </td>
+    </tr>
+    <tr>
+        <td>ULT</td>
+        <td>
+            default:<input @bind="ULT" size="4" />
+            min:<input @bind="ULTmin" size="4" />
+            max:<input @bind="ULTmax" size="4" />
+            step:<input @bind="ULTstep" size="4" />
+            <br />
+            Clear input fields to skip  inclusion
+        </td>
+    </tr>
+    <tr>
+        <td>ULT timeframe</td>
+        <td>
+            default:<input @bind="ULTT" size="4" />
+            min:<input @bind="ULTTmin" size="4" />
+            max:<input @bind="ULTTmax" size="4" />
+            step:<input @bind="ULTTstep" size="4" style="display:none" /><br />
+            0=3m, 1=5m, 2=15m, 3=30m, 4=1h, 5=2h, 6=4h
+        </td>
+    </tr>
+
+
+</table>
+<button style="float:right" @onclick="@addBots">Add Random Bots to Paper Account</button>
+<h3>
+    <div style="text-align:center">
+        @output
+    </div>
+</h3>
+<br />
+<br />
+<br />
+
+
+@code {
+    string output;
+
+    string key, secret, numBots = "100", botName = "Bot";
+    string BO = "10", BOmin = "10", BOmax = "100", BOstep = "5";
+    string SO = "10", SOmin = "10", SOmax = "100", SOstep = "5";
+    string SOS = "1", SOSmin = "0.5", SOSmax = "15", SOSstep = "0.25";
+    string SS = "1", SSmin = "0.5", SSmax = "2.5", SSstep = "0.05";
+    string OS = "1", OSmin = "0.5", OSmax = "2.5", OSstep = "0.05";
+    string TP = "3", TPmin = "0.4", TPmax = "10", TPstep = "0.2";
+    string SC = "2", SCmin = "1", SCmax = "4", SCstep = "1";
+    string QFLT = "1", QFLTmin = "0", QFLTmax = "3", QFLTstep = "1";
+    string QFLP = "3", QFLPmin = "3", QFLPmax = "12", QFLPstep = "0.5";
+    string TV = "0", TVmin = "0", TVmax = "3", TVstep = "1";
+    string TVT = "2", TVTmin = "0", TVTmax = "8", TVTstep = "1";
+    string RSI = "50", RSImin = "20", RSImax = "65", RSIstep = "1";
+    string RSIT = "2", RSITmin = "0", RSITmax = "6", RSITstep = "1";
+    string ULT = "50", ULTmin = "20", ULTmax = "65", ULTstep = "1";
+    string ULTT = "2", ULTTmin = "0", ULTTmax = "6", ULTTstep = "1";
+
+    string pairs = "USDT_1INCH, USDT_AAVE, USDT_ACM, USDT_ADA, USDT_AGLD, USDT_AION, USDT_AKRO, USDT_ALGO, USDT_ALICE, USDT_ALPACA, USDT_ALPHA, USDT_ANKR, USDT_ANT, USDT_AR, USDT_ARDR, USDT_ARPA, USDT_ASR, USDT_ATA, USDT_ATM, USDT_ATOM, USDT_AUDIO, USDT_AUTO, USDT_AVA, USDT_AVAX, USDT_AXS, USDT_BADGER, USDT_BAKE, USDT_BAL, USDT_BAND, USDT_BAR, USDT_BAT, USDT_BCH, USDT_BEAM, USDT_BEL, USDT_BETA, USDT_BLZ, USDT_BNB, USDT_BNT, USDT_BOND, USDT_BTC, USDT_BTCST, USDT_BTG, USDT_BTS, USDT_BTT, USDT_BURGER, USDT_BZRX, USDT_C98, USDT_CAKE, USDT_CELO, USDT_CELR, USDT_CFX, USDT_CHR, USDT_CHZ, USDT_CKB, USDT_CLV, USDT_COCOS, USDT_COMP, USDT_COS, USDT_COTI, USDT_CRV, USDT_CTK, USDT_CTSI, USDT_CTXC, USDT_CVC, USDT_CVP, USDT_DASH, USDT_DATA, USDT_DCR, USDT_DEGO, USDT_DENT, USDT_DEXE, USDT_DF, USDT_DGB, USDT_DIA, USDT_DNT, USDT_DOCK, USDT_DODO, USDT_DOGE, USDT_DOT, USDT_DREP, USDT_DUSK, USDT_DYDX, USDT_EGLD, USDT_ELF, USDT_ENJ, USDT_EOS, USDT_EPS, USDT_ERN, USDT_ETC, USDT_ETH, USDT_FARM, USDT_FET, USDT_FIDA, USDT_FIL, USDT_FIO, USDT_FIRO, USDT_FIS, USDT_FLM, USDT_FLOW, USDT_FOR, USDT_FORTH, USDT_FRONT, USDT_FTM, USDT_FTT, USDT_FUN, USDT_GALA, USDT_GBP, USDT_GHST, USDT_GNO, USDT_GRT, USDT_GTC, USDT_GTO, USDT_GXS, USDT_HARD, USDT_HBAR, USDT_HIVE, USDT_HNT, USDT_HOT, USDT_ICP, USDT_ICX, USDT_IDEX, USDT_ILV, USDT_INJ, USDT_IOST, USDT_IOTA, USDT_IOTX, USDT_IRIS, USDT_JST, USDT_JUV, USDT_KAVA, USDT_KEEP, USDT_KEY, USDT_KLAY, USDT_KMD, USDT_KNC, USDT_KSM, USDT_LINA, USDT_LINK, USDT_LIT, USDT_LPT, USDT_LRC, USDT_LSK, USDT_LTC, USDT_LTO, USDT_LUNA, USDT_MANA, USDT_MASK, USDT_MATIC, USDT_MBL, USDT_MBOX, USDT_MDT, USDT_MDX, USDT_MFT, USDT_MINA, USDT_MIR, USDT_MITH, USDT_MKR, USDT_MLN, USDT_MTL, USDT_NANO, USDT_NBS, USDT_NEAR, USDT_NEO, USDT_NKN, USDT_NMR, USDT_NU, USDT_NULS, USDT_OCEAN, USDT_OG, USDT_OGN, USDT_OM, USDT_OMG, USDT_ONE, USDT_ONG, USDT_ONT, USDT_ORN, USDT_OXT, USDT_PAXG, USDT_PERL, USDT_PERP, USDT_PHA, USDT_PNT, USDT_POLS, USDT_POLY, USDT_POND, USDT_PSG, USDT_PUNDIX, USDT_QNT, USDT_QTUM, USDT_QUICK, USDT_RAD, USDT_RAMP, USDT_RARE, USDT_RAY, USDT_REEF, USDT_REN, USDT_REP, USDT_REQ, USDT_RIF, USDT_RLC, USDT_ROSE, USDT_RSR, USDT_RUNE, USDT_RVN, USDT_SAND, USDT_SC, USDT_SFP, USDT_SHIB, USDT_SKL, USDT_SLP, USDT_SNX, USDT_SOL, USDT_SRM, USDT_STMX, USDT_STORJ, USDT_STPT, USDT_STRAX, USDT_STX, USDT_SUN, USDT_SUPER, USDT_SUSD, USDT_SUSHI, USDT_SXP, USDT_SYS, USDT_TCT, USDT_TFUEL, USDT_THETA, USDT_TKO, USDT_TLM, USDT_TOMO, USDT_TORN, USDT_TRB, USDT_TRIBE, USDT_TROY, USDT_TRU, USDT_TRX, USDT_TVK, USDT_TWT, USDT_UMA, USDT_UNFI, USDT_UNI, USDT_USDC, USDT_UTK, USDT_VET, USDT_VIDT, USDT_VITE, USDT_VTHO, USDT_WAN, USDT_WAVES, USDT_WAXP, USDT_WIN, USDT_WING, USDT_WNXM, USDT_WRX, USDT_WTC, USDT_XEC, USDT_XEM, USDT_XLM, USDT_XMR, USDT_XRP, USDT_XTZ, USDT_XVG, USDT_XVS, USDT_YFI, USDT_YFII, USDT_YGG, USDT_ZEC, USDT_ZEN, USDT_ZIL, USDT_ZRX";
+
+    XCommasApi api;
+    int accountId = 0;
+
+    async Task addBots(MouseEventArgs e)
+    {
+        api = new XCommas.Net.XCommasApi(key, secret, default, UserMode.Paper);
+        var accts = await api.GetAccountsAsync();
+        accountId = accts.Data[0].Id;
+
+        //get a nice random number
+        Random r = new Random(Guid.NewGuid().GetHashCode());
+
+        //convert to decimal
+        decimal _BO = D(BO), _BOmin = D(BOmin), _BOmax = D(BOmax), _BOstep = D(BOstep);
+        decimal _SO = D(SO), _SOmin = D(SOmin), _SOmax = D(SOmax), _SOstep = D(SOstep);
+        decimal _SOS = D(SOS), _SOSmin = D(SOSmin), _SOSmax = D(SOSmax), _SOSstep = D(SOSstep);
+        decimal _SS = D(SS), _SSmin = D(SSmin), _SSmax = D(SSmax), _SSstep = D(SSstep);
+        decimal _OS = D(OS), _OSmin = D(OSmin), _OSmax = D(OSmax), _OSstep = D(OSstep);
+        decimal _TP = D(TP), _TPmin = D(TPmin), _TPmax = D(TPmax), _TPstep = D(TPstep);
+        decimal _SC = D(SC), _SCmin = D(SCmin), _SCmax = D(SCmax), _SCstep = D(SCstep);
+        decimal _QFLT = D(QFLT), _QFLTmin = D(QFLTmin), _QFLTmax = D(QFLTmax), _QFLTstep = D(QFLTstep);
+        decimal _QFLP = D(QFLP), _QFLPmin = D(QFLPmin), _QFLPmax = D(QFLPmax), _QFLPstep = D(QFLPstep);
+        decimal _TV = D(TV), _TVmin = D(TVmin), _TVmax = D(TVmax), _TVstep = D(TVstep);
+        decimal _TVT = D(TVT), _TVTmin = D(TVTmin), _TVTmax = D(TVTmax), _TVTstep = D(TVTstep);
+        decimal _RSI = D(RSI), _RSImin = D(RSImin), _RSImax = D(RSImax), _RSIstep = D(RSIstep);
+        decimal _RSIT = D(RSIT), _RSITmin = D(RSITmin), _RSITmax = D(RSITmax), _RSITstep = D(RSITstep);
+        decimal _ULT = D(ULT), _ULTmin = D(ULTmin), _ULTmax = D(ULTmax), _ULTstep = D(ULTstep);
+        decimal _ULTT = D(ULTT), _ULTTmin = D(ULTTmin), _ULTTmax = D(ULTTmax), _ULTTstep = D(ULTTstep);
+
+        //prevent divide by zero
+        if (_BOstep == 0) _BOstep = 1;
+        if (_SOstep == 0) _SOstep = 1;
+        if (_SOSstep == 0) _SOSstep = 1;
+        if (_SSstep == 0) _SSstep = 1;
+        if (_OSstep == 0) _OSstep = 1;
+        if (_TPstep == 0) _TPstep = 1;
+
+        int n = Convert.ToInt32(numBots);
+        //create some bots
+        for (int i = 0; i < n; i++)
+        {
+
+            //generate random parameters based on input
+            decimal BO_ = r.Next((int)(_BOmin / _BOstep), 1 + (int)(_BOmax / _BOstep)) * _BOstep;
+            decimal SO_ = r.Next((int)(_SOmin / _SOstep), 1 + (int)(_SOmax / _SOstep)) * _SOstep;
+            decimal SOS_ = r.Next((int)(_SOSmin / _SOSstep), 1 + (int)(_SOSmax / _SOSstep)) * _SOSstep;
+            decimal SS_ = r.Next((int)(_SSmin / _SSstep), 1 + (int)(_SSmax / _SSstep)) * _SSstep;
+            decimal OS_ = r.Next((int)(_OSmin / _OSstep), 1 + (int)(_OSmax / _OSstep)) * _OSstep;
+            decimal TP_ = r.Next((int)(_TPmin / _TPstep), 1 + (int)(_TPmax / _TPstep)) * _TPstep;
+
+            //if min isn't filled then assume we use defaults
+            if (BOmin.Trim() == "") BO_ = _BO;
+            if (SOmin.Trim() == "") SO_ = _SO;
+            if (SOSmin.Trim() == "") SOS_ = _SOS;
+            if (SSmin.Trim() == "") SS_ = _SS;
+            if (OSmin.Trim() == "") OS_ = _OS;
+            if (TPmin.Trim() == "") TP_ = _TP;
+
+
+            //iterate for provided number of start conditions
+            //If TV or QFLT are empty string then we skip that type
+            if (_SCstep == 0) _SCstep = 1;
+            int SC_ = (int)(r.Next((int)(_SCmin / _SCstep), 1 + (int)(_SCmax / _SCstep)) * _SCstep);
+
+            List<BotStrategy> Strategies = new List<BotStrategy>();
+
+            //if it's none of the provided start conditions then it must be non-stop
+            if ((QFLT.Trim() == "" && TV.Trim() == "" && RSI.Trim() == "" && ULT.Trim() == "") || SC_ == 0)
+            {
+                BotStrategy b = new NonStopBotStrategy { };
+                Strategies.Add(b);
+            }
+            else
+            {
+                for (int j = 0; j < SC_; j++)
+                {
+                    int choose = r.Next(0, 4);
+                    bool addedSC = false;
+                    if (QFLT != "" && choose == 0)
+                    {
+                        if (_QFLTstep == 0) _QFLTstep = 1;
+                        int QFLT_ = (int)(r.Next((int)(_QFLTmin / _QFLTstep), 1 + (int)(_QFLTmax / _QFLTstep)) * _QFLTstep);
+                        if (QFLTmin.Trim() == "") QFLT_ = (int)_QFLT;
+
+                        if (_QFLPstep == 0) _QFLPstep = 1;
+                        decimal QFLP_ = r.Next((int)(_QFLPmin / _QFLPstep), 1 + (int)(_QFLPmax / _QFLPstep)) * _QFLPstep;
+                        if (QFLPmin.Trim() == "") QFLP_ = _QFLP;
+
+                        BotStrategy b = new QflBotStrategy { Options = new QflOptions { Percent = QFLP_, Type = (QflType)QFLT_ } };
+                        Strategies.Add(b);
+                        addedSC = true;
+                    }
+                    if (TV != "" && choose == 1)
+                    {
+                        if (_TVstep == 0) _TVstep = 1;
+                        int TV_ = (int)(r.Next((int)(_TVmin / _TVstep), 1 + (int)(_TVmax / _TVstep)) * _TVstep);
+                        if (TV.Trim() == "") TV_ = (int)_TV;
+
+                        if (_TVTstep == 0) _TVTstep = 1;
+                        int TVT_ = (int)(r.Next((int)(_TVTmin / _TVTstep), 1 + (int)(_TVTmax / _TVTstep)) * _TVTstep);
+                        if (TVTmin.Trim() == "") TVT_ = (int)_TVT;
+
+                        BotStrategy b = new TradingViewBotStrategy { Options = new TradingViewOptions { Time = (TradingViewTime)TVT_, Type = (TradingViewIndicatorType)TV_ } };
+                        Strategies.Add(b);
+                        addedSC = true;
+                    }
+                    if (RSI != "" && choose == 2)
+                    {
+                        if (_RSIstep == 0) _RSIstep = 1;
+                        decimal RSI_ = r.Next((int)(_RSImin / _RSIstep), 1 + (int)(_RSImax / _RSIstep)) * _RSIstep;
+                        if (RSI.Trim() == "") RSI_ = _RSI;
+
+                        if (_RSITstep == 0) _RSITstep = 1;
+                        int RSIT_ = (int)(r.Next((int)(_RSITmin / _RSITstep), 1 + (int)(_RSITmax / _RSITstep)) * _RSITstep);
+                        if (RSITmin.Trim() == "") RSIT_ = (int)_RSIT;
+
+                        BotStrategy b = new RsiBotStrategy { Options = new RsiOptions { Time = (IndicatorTime)RSIT_, Points = (int)RSI_ } };
+                        Strategies.Add(b);
+                        addedSC = true;
+                    }
+                    if (ULT != "" && choose == 3)
+                    {
+                        if (_ULTstep == 0) _ULTstep = 1;
+                        decimal ULT_ = r.Next((int)(_ULTmin / _ULTstep), 1 + (int)(_ULTmax / _ULTstep)) * _ULTstep;
+                        if (ULT.Trim() == "") ULT_ = _ULT;
+
+                        if (_ULTTstep == 0) _ULTTstep = 1;
+                        int ULTT_ = (int)(r.Next((int)(_ULTTmin / _ULTTstep), 1 + (int)(_ULTTmax / _ULTTstep)) * _ULTTstep);
+                        if (ULTTmin.Trim() == "") ULTT_ = (int)_ULTT;
+
+                        BotStrategy b = new UltBotStrategy { Options = new UltOptions { Time = (IndicatorTime)ULTT_, Points = (int)ULT_ } };
+                        Strategies.Add(b);
+                        addedSC = true;
+                    }
+
+                    if (!addedSC) j--;
+                }
+            }
+
+            await CreateBot(pairs.Split(',').Select(p => p.Trim()).ToArray(),
+                    BO: BO_,
+                    SO: SO_,
+                    SS: SS_,
+                    OS: OS_,
+                    SOS: SOS_,
+                    TP: TP_,
+                    TTP: true,
+                    Strategies: Strategies,
+                    name: $"{botName}_{i + 1}"
+                    );
+
+            await Task.Delay(200);
+        }
+    }
+
+    decimal D(string num)
+    {
+        if (num.Trim() == "") return 0;
+        else return Convert.ToDecimal(num);
+    }
+
+    async Task CreateBot(string[] pairs,
+            int MSTC = 3,
+            decimal BO = 10m,
+            decimal SO = 16.5m,
+            decimal SS = 1.3m,
+            decimal OS = 1.1m,
+            decimal SOS = 2.5m,
+            decimal TP = 1m,
+            bool TTP = true,
+            List<BotStrategy> Strategies = null,
+            string name = "My new bot",
+            int MaxActive = 3)
+    {
+        var data = new BotData
+        {
+            Pairs = pairs,
+            ActiveSafetyOrdersCount = 1,
+            BaseOrderVolume = BO,
+            SafetyOrderVolume = SO,
+            MartingaleStepCoefficient = SS,
+            MartingaleVolumeCoefficient = OS,
+            //MinVolumeBtc24h = 10m,
+            MaxActiveDeals = MaxActive,
+            ProfitCurrency = ProfitCurrency.QuoteCurrency,
+            SafetyOrderStepPercentage = SOS,
+            MaxSafetyOrders = MSTC,
+            TakeProfitType = TakeProfitType.Total,
+            TakeProfit = TP,
+            Name = name,
+            TrailingEnabled = TTP,
+            TrailingDeviation = .2m,
+            StartOrderType = StartOrderType.Limit,
+            Strategies = Strategies
+            ,
+        };
+        var bot = await api.CreateBotAsync(accountId, Strategy.Long, data);
+        if (bot.IsSuccess)
+        {
+            output = $"Success creating {name} !";
+        }
+        await api.EnableBotAsync(bot.Data.Id);
+    }
+
+
+
+}
