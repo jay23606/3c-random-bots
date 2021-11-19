@@ -24,4 +24,5 @@ nohup dotnet run --urls=http://0.0.0.0:8080
 To kill it later:
 
 ps -ef
-kill <pid> 
+
+kill process_id 
