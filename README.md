@@ -3,6 +3,8 @@ Creates random bots in 3c paper account as a way to see what settings and start 
 
 Instructions to run (linux):
 
+install .net sdk https://docs.microsoft.com/en-us/dotnet/core/install/
+
 dotnet new blazorserver --name random-bots
 
 cd random-bots
