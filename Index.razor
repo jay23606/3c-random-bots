@@ -2,7 +2,7 @@
 @using XCommas.Net
 @using XCommas.Net.Objects
 <h1><div style="font-variant:small-caps;text-align:center">3Commas Random Bot Generator</div></h1>
-<table style='width:100%'>
+<table style='width:100%' class="tbl">
     <tr>
         <td style="width:150px">3c api key</td>
         <td><input style='width:100%' @bind="key" /></td>
@@ -19,11 +19,28 @@
     </tr>
     <tr>
         <td>Bot name</td>
-        <td><input @bind="botName" />will be named e.g. &lt;Bot Name&gt;_&lt;1-100&gt;</td>
+        <td>
+            <input @bind="botName" />will be named e.g. &lt;Bot Name&gt;_&lt;1-100&gt;
+
+            <button style="float:right" @onclick="@delBots">Delete Random Bots with this name</button>
+
+            <span style="float:right">
+                <input type="checkbox" @bind="botNameStartsWith" title="uncheck to perform exact match" />Starts With
+            </span>
+        </td>
     </tr>
     <tr>
         <td>Pairs</td>
         <td><textarea @bind="pairs" style='width:100%' rows="4" /></td>
+    </tr>
+    <tr>
+        <td>Max active deals</td>
+        <td>
+            default:<input @bind="MAD" size="4" />
+            min:<input @bind="MADmin" size="4" />
+            max:<input @bind="MADmax" size="4" />
+            step:<input @bind="MADstep" size="4" style="display:none" />
+        </td>
     </tr>
     <tr>
         <td>BO</td>
@@ -53,6 +70,15 @@
         </td>
     </tr>
     <tr>
+        <td>MSTC</td>
+        <td>
+            default:<input @bind="MSTC" size="4" />
+            min:<input @bind="MSTCmin" size="1" />
+            max:<input @bind="MSTCmax" size="10" />
+            step:<input @bind="MSTCstep" size="1" />
+        </td>
+    </tr>
+    <tr>
         <td>OS (volume scale)</td>
         <td>
             default:<input @bind="OS" size="4" />
@@ -77,6 +103,15 @@
             min:<input @bind="TPmin" size="4" />
             max:<input @bind="TPmax" size="4" />
             step:<input @bind="TPstep" size="4" />
+        </td>
+    </tr>
+    <tr>
+        <td>SL</td>
+        <td>
+            default:<input @bind="SL" size="4" />
+            min:<input @bind="SLmin" size="4" />
+            max:<input @bind="SLmax" size="4" />
+            step:<input @bind="SLstep" size="4" />
         </td>
     </tr>
     <tr>
@@ -180,7 +215,7 @@
     <tr>
         <td>TA Presets</td>
         <td>
-            defaTA:<input @bind="TA" size="4" />
+            default:<input @bind="TA" size="4" />
             min:<input @bind="TAmin" size="4" />
             max:<input @bind="TAmax" size="4" />
             step:<input @bind="TAstep" size="4" style="display:none" />
@@ -191,7 +226,7 @@
     <tr>
         <td>TA Presets timeframe</td>
         <td>
-            defaTA:<input @bind="TAT" size="4" />
+            default:<input @bind="TAT" size="4" />
             min:<input @bind="TATmin" size="4" />
             max:<input @bind="TATmax" size="4" />
             step:<input @bind="TATstep" size="4" style="display:none" /><br />
@@ -210,18 +245,32 @@
 <br />
 <br />
 
+<style>
+    .tbl{
+        border-collapse:collapse;
+    }
+    .tbl td {
+        border:1px solid white;
+    }
+</style>
+
 
 @code {
 
     string output;
 
+    bool botNameStartsWith = true;
+
     string key, secret, numBots = "100", botName = "Bot";
+    string MAD = "1", MADmin = "1", MADmax = "5", MADstep = "1";
     string BO = "10", BOmin = "10", BOmax = "100", BOstep = "5";
     string SO = "10", SOmin = "10", SOmax = "100", SOstep = "5";
     string SOS = "1", SOSmin = "0.5", SOSmax = "15", SOSstep = "0.25";
+    string MSTC = "1", MSTCmin = "1", MSTCmax = "10", MSTCstep = "1";
     string SS = "1", SSmin = "0.5", SSmax = "2.5", SSstep = "0.05";
     string OS = "1", OSmin = "0.5", OSmax = "2.5", OSstep = "0.05";
     string TP = "3", TPmin = "0.4", TPmax = "10", TPstep = "0.2";
+    string SL = "", SLmin = "1", SLmax = "10", SLstep = "0.5";
     string SC = "2", SCmin = "1", SCmax = "4", SCstep = "1";
     string QFLT = "1", QFLTmin = "0", QFLTmax = "3", QFLTstep = "1";
     string QFLP = "3", QFLPmin = "3", QFLPmax = "12", QFLPstep = "0.5";
@@ -249,12 +298,15 @@
         Random r = new Random(Guid.NewGuid().GetHashCode());
 
         //convert to decimal
+        decimal _MAD = D(MAD), _MADmin = D(MADmin), _MADmax = D(MADmax), _MADstep = D(MADstep);
         decimal _BO = D(BO), _BOmin = D(BOmin), _BOmax = D(BOmax), _BOstep = D(BOstep);
         decimal _SO = D(SO), _SOmin = D(SOmin), _SOmax = D(SOmax), _SOstep = D(SOstep);
         decimal _SOS = D(SOS), _SOSmin = D(SOSmin), _SOSmax = D(SOSmax), _SOSstep = D(SOSstep);
+        decimal _MSTC = D(MSTC), _MSTCmin = D(MSTCmin), _MSTCmax = D(MSTCmax), _MSTCstep = D(MSTCstep);
         decimal _SS = D(SS), _SSmin = D(SSmin), _SSmax = D(SSmax), _SSstep = D(SSstep);
         decimal _OS = D(OS), _OSmin = D(OSmin), _OSmax = D(OSmax), _OSstep = D(OSstep);
         decimal _TP = D(TP), _TPmin = D(TPmin), _TPmax = D(TPmax), _TPstep = D(TPstep);
+        decimal _SL = D(SL), _SLmin = D(SLmin), _SLmax = D(SLmax), _SLstep = D(SLstep);
         decimal _SC = D(SC), _SCmin = D(SCmin), _SCmax = D(SCmax), _SCstep = D(SCstep);
         decimal _QFLT = D(QFLT), _QFLTmin = D(QFLTmin), _QFLTmax = D(QFLTmax), _QFLTstep = D(QFLTstep);
         decimal _QFLP = D(QFLP), _QFLPmin = D(QFLPmin), _QFLPmax = D(QFLPmax), _QFLPstep = D(QFLPstep);
@@ -268,12 +320,15 @@
         decimal _TAT = D(TAT), _TATmin = D(TATmin), _TATmax = D(TATmax), _TATstep = D(TATstep);
 
         //prevent divide by zero
+        if (_MADstep == 0) _MADstep = 1;
         if (_BOstep == 0) _BOstep = 1;
         if (_SOstep == 0) _SOstep = 1;
         if (_SOSstep == 0) _SOSstep = 1;
+        if (_MSTCstep == 0) _MSTCstep = 1;
         if (_SSstep == 0) _SSstep = 1;
         if (_OSstep == 0) _OSstep = 1;
         if (_TPstep == 0) _TPstep = 1;
+        if (_SLstep == 0) _SLstep = 1;
 
         int n = Convert.ToInt32(numBots);
         //create some bots
@@ -281,21 +336,26 @@
         {
 
             //generate random parameters based on input
+            decimal MAD_ = r.Next((int)(_MADmin / _MADstep), 1 + (int)(_MADmax / _MADstep)) * _MADstep;
             decimal BO_ = r.Next((int)(_BOmin / _BOstep), 1 + (int)(_BOmax / _BOstep)) * _BOstep;
             decimal SO_ = r.Next((int)(_SOmin / _SOstep), 1 + (int)(_SOmax / _SOstep)) * _SOstep;
             decimal SOS_ = r.Next((int)(_SOSmin / _SOSstep), 1 + (int)(_SOSmax / _SOSstep)) * _SOSstep;
+            decimal MSTC_ = r.Next((int)(_MSTCmin / _MSTCstep), 1 + (int)(_MSTCmax / _MSTCstep)) * _MSTCstep;
             decimal SS_ = r.Next((int)(_SSmin / _SSstep), 1 + (int)(_SSmax / _SSstep)) * _SSstep;
             decimal OS_ = r.Next((int)(_OSmin / _OSstep), 1 + (int)(_OSmax / _OSstep)) * _OSstep;
             decimal TP_ = r.Next((int)(_TPmin / _TPstep), 1 + (int)(_TPmax / _TPstep)) * _TPstep;
+            decimal SL_ = r.Next((int)(_SLmin / _SLstep), 1 + (int)(_SLmax / _SLstep)) * _SLstep;
 
             //if min isn't filled then assume we use defaults
+            if (MADmin.Trim() == "") MAD_ = _MAD;
             if (BOmin.Trim() == "") BO_ = _BO;
             if (SOmin.Trim() == "") SO_ = _SO;
             if (SOSmin.Trim() == "") SOS_ = _SOS;
+            if (MSTCmin.Trim() == "") MSTC_ = _MSTC;
             if (SSmin.Trim() == "") SS_ = _SS;
             if (OSmin.Trim() == "") OS_ = _OS;
             if (TPmin.Trim() == "") TP_ = _TP;
-
+            if (SLmin.Trim() == "") SL_ = _SL;
 
             //iterate for provided number of start conditions
             //If TV or QFLT are empty string then we skip that type
@@ -392,6 +452,7 @@
             }
 
             await CreateBot(pairs.Split(',').Select(p => p.Trim()).ToArray(),
+                    MSTC: (int)MSTC_,
                     BO: BO_,
                     SO: SO_,
                     SS: SS_,
@@ -400,7 +461,9 @@
                     TP: TP_,
                     TTP: true,
                     Strategies: Strategies,
-                    name: $"{botName}_{i + 1}"
+                    name: $"{botName}_{i + 1}",
+                    MaxActive: (int)MAD_,
+                    StopLoss: ((SL_ == 0) ? null : SL_)
                     );
 
             await Task.Delay(200);
@@ -411,6 +474,20 @@
     {
         if (num.Trim() == "") return 0;
         else return Convert.ToDecimal(num);
+    }
+
+    async Task delBots(MouseEventArgs e)
+    {
+        var bots = await api.GetBotsAsync(limit: 1500, botScope: BotScope.Enabled);
+        foreach (Bot bot in bots.Data)
+        {
+            if ((botNameStartsWith && bot.Name.StartsWith(botName)) || bot.Name == botName)
+            {
+                await api.DisableBotAsync(bot.Id);
+                await api.PanicSellAllBotDealsAsync(bot.Id);
+                await api.DeleteBotAsync(bot.Id);
+            }
+        }
     }
 
     async Task CreateBot(string[] pairs,
@@ -424,6 +501,7 @@
             bool TTP = true,
             List<BotStrategy> Strategies = null,
             string name = "My new bot",
+            decimal? StopLoss=null,
             int MaxActive = 3)
     {
         var data = new BotData
@@ -446,8 +524,9 @@
             TrailingDeviation = .2m,
             StartOrderType = StartOrderType.Limit,
             Strategies = Strategies
-            ,
         };
+        if (StopLoss != null) data.StopLossPercentage = (decimal)StopLoss;
+
         var bot = await api.CreateBotAsync(accountId, Strategy.Long, data);
         if (bot.IsSuccess)
         {
